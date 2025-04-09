@@ -1,4 +1,14 @@
 <script setup>
+import {onMounted, reactive} from "vue";
+
+let pokemons = reactive();
+
+onMounted(()=>{
+  fetch("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0")
+  .then(res => res.json())
+  // .then(res => console.log(res));
+  .then(res => pokemons = res.results);
+})
 
 </script>
 
@@ -7,7 +17,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <router-link class="navbar-brand" to="/">
-        <img src="./assets/logo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+        <img src="./assets/logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
         Pokedéx
       </router-link>
       <!-- <router-link class="navbar-brand" to="/">Pokedex</router-link> -->
