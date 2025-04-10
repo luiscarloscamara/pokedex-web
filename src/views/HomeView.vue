@@ -2,6 +2,7 @@
   import { onMounted, reactive, ref } from "vue";
   import ListPokemons from "@/components/ListPokemons.vue";
 
+  let urlImgPoke = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/")
   let pokemons = reactive(ref());
 
   onMounted(() => {
@@ -38,6 +39,7 @@
               v-for="pokemon in pokemons"
               :key="pokemon.name"
               :name="pokemon.name"
+              :urlImgPoke="urlImgPoke + pokemon.url.split('/')[6] + '.svg'"
               />
             </div>
           </div>
