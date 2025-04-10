@@ -10,7 +10,7 @@ const pokemon = defineProps(["name", "urlImgPoke"])
             <img 
             :src="urlImgPoke" class="card-img-top" 
             alt="..."
-            height="80"
+            height="90"
             >
         </div>
     </div>
@@ -27,6 +27,6 @@ const pokemon = defineProps(["name", "urlImgPoke"])
         background: radial-gradient(circle, rgba(72,63,251,0.6) 0%, rgba(70,252,244,0.4) 100%);
     }
     .cardListPokemon img:hover{
-        padding: .1rem;
+        padding: .2rem;
     }
 </style>
