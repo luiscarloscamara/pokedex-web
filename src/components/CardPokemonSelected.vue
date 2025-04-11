@@ -70,4 +70,15 @@ watch(() => pokemon.img, (newImg) => {
     object-fit: contain;
     margin-bottom: 1rem; /* Espaço entre imagem e infos */
 }
+
+@media (max-width: 768px) {
+    .CardPokemonSelected{
+        height: 30vh;
+        width: 40%;
+        margin: 0 auto 10px auto;
+    }
+    .CardPokemonSelected img{
+        height: 100px;
+    }
+}
 </style>
