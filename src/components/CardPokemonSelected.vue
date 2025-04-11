@@ -1,50 +1,73 @@
 <script setup>
-const pokemon = defineProps (["name", "xp", "altura", "img", "loading"])
+import { ref, watch } from 'vue'
+
+const pokemon = defineProps(["name", "xp", "altura", "img", "loading"])
+const ovoImg = new URL("../assets/ovo.png", import.meta.url).href;
+const imgSrc = ref(pokemon.img)
+
+watch(() => pokemon.img, (newImg) => {
+  imgSrc.value = newImg
+})
 </script>
 
 <template>
     <div 
-    class="card CardPokemonSelected"
-    :class="loading ? '' : 'animate__animated animate__flipInY'"
+      class="card CardPokemonSelected"
+      :class="loading ? '' : 'animate__animated animate__flipInY'"
     >
-        <img
+      <img
         v-if="pokemon.name"
-        :src="pokemon.img" 
+        :src="imgSrc"
+        @error="imgSrc = ovoImg"
         height="250"
-        class="card-img-top pt-2" 
+        class="card-img-top mb-4" 
         :alt="pokemon.name"
-        >
-        <img
+      >
+      <img
         v-else
-        src="../assets/ovo.png" 
+        :src="ovoImg" 
         height="250"
-        class="card-img-top pt-2" 
+        class="card-img-top mb-4" 
         alt="???"
-        >
-        
-        <div class="card-body">
-          <h5 class="card-title text-center">{{ pokemon.name || '???' }}</h5>
-          <hr>
-          <div class="row">
-            <section class="col">
-                <strong>XP:</strong>
-                <span>{{ pokemon.xp }}</span>
-            </section>
-            <section class="col">
-                <strong>Altura:</strong>
-                <span>{{ pokemon.altura }}</span>
-            </section>
-
-          </div>
-          <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+      >
+      
+      <div class="card-body text-center">
+        <h5 class="card-title">{{ pokemon.name || '???' }}</h5>
+        <hr>
+        <div class="row">
+          <section class="col">
+            <strong>XP:</strong>
+            <span>{{ pokemon.xp }}</span>
+          </section>
+          <section class="col">
+            <strong>Altura:</strong>
+            <span>{{ pokemon.altura }}</span>
+          </section>
         </div>
+      </div>
     </div>
-</template>
+  </template>
 
 <style scoped>
-   .CardPokemonSelected{
-        height: 75vh;
-        background: rgb(72,63,251);
-        background: radial-gradient(circle, rgba(117, 228, 130, 0.6) 0%, rgba(188, 161, 39, 0.2) 100%);
-   } 
+.card-body {
+  width: 100%;
+  text-align: center;
+}
+
+.CardPokemonSelected {
+    height: 75vh;
+    background: radial-gradient(circle, rgba(117, 228, 130, 0.6) 0%, rgba(188, 161, 39, 0.2) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem;
+}
+
+.card-img-top {
+    max-height: 300px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 1rem; /* Espaço entre imagem e infos */
+}
 </style>
