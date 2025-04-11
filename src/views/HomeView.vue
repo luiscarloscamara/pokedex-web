@@ -7,6 +7,7 @@
   let pokemons = reactive(ref());
   let searchPokemonField = ref("")
   let pokemonSelected = reactive(ref());
+  let loading= ref(false)
 
   onMounted(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0")
@@ -25,12 +26,31 @@
     return pokemons.value;
   })
 
-  const selectPokemon = (pokemon) => {
-    fetch(pokemon.url)
-    .then(res => res.json())
-    .then(res => pokemonSelected.value = res);
-    console.log(pokemon)
+
+  const selectPokemon = async (pokemon) => {
+  loading.value = true;
+  try {
+    const res = await fetch(pokemon.url);
+    const data = await res.json();
+    pokemonSelected.value = data;
+  } catch (err) {
+    alert(err);
+  } finally {
+    loading.value = false;
   }
+  console.log(pokemon);
+  }
+  // const selectPokemon = (pokemon) => {
+  //   loading.value = true;
+  //   await fetch(pokemon.url)
+  //   .then(res => res.json())
+  //   .then(res => pokemonSelected.value = res);
+  //   .catch(err => alert(err))
+  //   .finally(()=>{
+  //     loading.value = false;
+  //   })
+  //   console.log(pokemon)
+  // }
 
 </script>
 
@@ -45,6 +65,7 @@
           :xp="pokemonSelected?.base_experience"
           :altura="pokemonSelected?.height"
           :img="pokemonSelected?.sprites.other.dream_world.front_default"
+          :loading="loading"
           />
           <!-- <div class="card" style="width: 18rem;">
             <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/149.png" class="card-img-top" alt="...">
