@@ -3,14 +3,15 @@
   import ListPokemons from "@/components/ListPokemons.vue";
   import CardPokemonSelected from "@/components/CardPokemonSelected.vue";
 
-  let urlImgPoke = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/")
+  // let urlImgPoke = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/")
+  let urlImgPoke = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/");
   let pokemons = reactive(ref());
   let searchPokemonField = ref("")
   let pokemonSelected = reactive(ref());
   let loading= ref(false)
 
   onMounted(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0")
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
       .then(res => res.json())
       .then(res => {
         pokemons.value = res.results;
@@ -64,7 +65,7 @@
           :name="pokemonSelected?.name"
           :xp="pokemonSelected?.base_experience"
           :altura="pokemonSelected?.height"
-          :img="pokemonSelected?.sprites.other.dream_world.front_default"
+          :img="pokemonSelected?.sprites.other['official-artwork'].front_default"
           :loading="loading"
           />
           <!-- <div class="card" style="width: 18rem;">
@@ -103,7 +104,7 @@
               v-for="pokemon in PokemonsFiltered"
               :key="pokemon.name"
               :name="pokemon.name"
-              :urlImgPoke="urlImgPoke + pokemon.url.split('/')[6] + '.svg'"
+              :urlImgPoke="urlImgPoke + pokemon.url.split('/')[6] + '.png'"
               @click="selectPokemon(pokemon)"
               />
             </div>
@@ -117,7 +118,7 @@
 
 <style>
   .card-list {
-    max-height: 450px;
+    max-height: 75vh;
     overflow-y: scroll;
     overflow-x: hidden;
   }
