@@ -7,15 +7,23 @@ const pokemon = defineProps (["name", "xp", "altura", "img", "loading"])
     class="card CardPokemonSelected"
     :class="loading ? '' : 'animate__animated animate__flipInY'"
     >
-        <img 
+        <img
+        v-if="pokemon.name"
         :src="pokemon.img" 
         height="250"
         class="card-img-top pt-2" 
-        alt="pokemon.name"
+        :alt="pokemon.name"
+        >
+        <img
+        v-else
+        src="../assets/ovo.png" 
+        height="250"
+        class="card-img-top pt-2" 
+        alt="???"
         >
         
         <div class="card-body">
-          <h5 class="card-title text-center">{{ pokemon.name }}</h5>
+          <h5 class="card-title text-center">{{ pokemon.name || '???' }}</h5>
           <hr>
           <div class="row">
             <section class="col">
@@ -35,7 +43,7 @@ const pokemon = defineProps (["name", "xp", "altura", "img", "loading"])
 
 <style scoped>
    .CardPokemonSelected{
-        height: 450px;
+        height: 75vh;
         background: rgb(72,63,251);
         background: radial-gradient(circle, rgba(117, 228, 130, 0.6) 0%, rgba(188, 161, 39, 0.2) 100%);
    } 
