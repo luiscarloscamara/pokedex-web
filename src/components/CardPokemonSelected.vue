@@ -1,7 +1,9 @@
 <script setup>
 import { ref, watch } from 'vue'
+import PokemonTypes from './PokemonTypes.vue'
 
-const pokemon = defineProps(["name", "xp", "altura", "img", "loading"])
+
+const pokemon = defineProps(["name", "id", "types", "species", "img", "loading"]);
 const ovoImg = new URL("../assets/ovo.png", import.meta.url).href;
 const imgSrc = ref(pokemon.img)
 
@@ -30,20 +32,29 @@ watch(() => pokemon.img, (newImg) => {
         class="card-img-top mb-4" 
         alt="???"
       >
-      
+
       <div class="card-body text-center">
         <h5 class="card-title">{{ pokemon.name || '???' }}</h5>
         <hr>
+        
         <div class="row">
-          <section class="col">
-            <strong>XP:</strong>
-            <span>{{ pokemon.xp }}</span>
-          </section>
-          <section class="col">
-            <strong>Altura:</strong>
-            <span>{{ pokemon.altura }}</span>
-          </section>
+            <section class="col">
+                <strong>ID: #</strong>
+                <span>{{ pokemon.id }}</span>
+            </section>
+            <section class="col">
+                <strong>Espécie: </strong>
+                <span>{{ pokemon.species }}</span>
+            </section>
         </div>
+        <div class="row mt-2">
+            <!-- <section class="col">
+                <strong>Tipo: </strong>
+                <span>{{ pokemon.types?.join(', ') }}</span>
+            </section> -->
+            <PokemonTypes :types="pokemon.types" />
+        </div>
+
       </div>
     </div>
   </template>

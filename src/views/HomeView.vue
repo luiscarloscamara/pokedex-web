@@ -35,13 +35,16 @@
       const res = await fetch(pokemon.url);
       const data = await res.json();
 
-      const id = pokemon.url.split("/")[6];
+      const id = data.id;
       const img = await getImgUrl(id);
+      const types = data.types.map(t => t.type.name);
+      const species = data.species.name;
 
       pokemonSelected.value = {
         name: data.name,
-        base_experience: data.base_experience,
-        height: data.height,
+        id,
+        types,
+        species,
         img,
       };
     } catch (err) {
@@ -83,13 +86,13 @@
           
           <CardPokemonSelected 
             :name="pokemonSelected?.name"
-            :xp="pokemonSelected?.base_experience"
-            :altura="pokemonSelected?.height"
+            :id="pokemonSelected?.id"
+            :types="pokemonSelected?.types"
+            :species="pokemonSelected?.species"
             :img="pokemonSelected?.img"
             :loading="loading"
           />
 
-          />
           <!-- <div class="card" style="width: 18rem;">
             <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/149.png" class="card-img-top" alt="...">
             <div class="card-body">
@@ -106,20 +109,16 @@
           <div class="card card-list">
             <div class="card-body row">
 
-              <div class="mb-3">
-                <label 
-                hidden 
-                for="searchPokemonField" 
-                class="form-label">
-                Pesquisar...
-                </label>
-
-                <input 
-                v-model="searchPokemonField"
-                type="text" 
-                class="form-control" 
-                id="searchPokemonField" 
-                placeholder="Pesquisar...">
+              <div class="sticky-top bg-white pb-2">
+                <div class="mb-3">
+                  <label hidden for="searchPokemonField" class="form-label">Pesquisar...</label>
+                  <input 
+                    v-model="searchPokemonField"
+                    type="text" 
+                    class="form-control" 
+                    id="searchPokemonField" 
+                    placeholder="Pesquisar...">
+                </div>
               </div>
 
               <ListPokemons
