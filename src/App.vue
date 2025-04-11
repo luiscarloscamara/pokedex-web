@@ -4,7 +4,7 @@ import {onMounted, reactive} from "vue";
 let pokemons = reactive();
 
 onMounted(()=>{
-  fetch("https://pokeapi.co/api/v2/pokemon?limit=151&offset=0")
+  fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
   .then(res => res.json())
   // .then(res => console.log(res));
   .then(res => pokemons = res.results);

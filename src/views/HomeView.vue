@@ -9,6 +9,7 @@
   let searchPokemonField = ref("")
   let pokemonSelected = reactive(ref());
   let loading= ref(false)
+  const ovoImg = new URL("@/assets/ovo.png", import.meta.url).href;
 
   onMounted(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
@@ -29,18 +30,26 @@
 
 
   const selectPokemon = async (pokemon) => {
-  loading.value = true;
-  try {
-    const res = await fetch(pokemon.url);
-    const data = await res.json();
-    pokemonSelected.value = data;
-  } catch (err) {
-    alert(err);
-  } finally {
-    loading.value = false;
-  }
-  console.log(pokemon);
-  }
+    loading.value = true;
+    try {
+      const res = await fetch(pokemon.url);
+      const data = await res.json();
+
+      const id = pokemon.url.split("/")[6];
+      const img = await getImgUrl(id);
+
+      pokemonSelected.value = {
+        name: data.name,
+        base_experience: data.base_experience,
+        height: data.height,
+        img,
+      };
+    } catch (err) {
+      alert(err);
+    } finally {
+      loading.value = false;
+    }
+  };
   // const selectPokemon = (pokemon) => {
   //   loading.value = true;
   //   await fetch(pokemon.url)
@@ -53,6 +62,17 @@
   //   console.log(pokemon)
   // }
 
+  const getImgUrl = async (id) => {
+    const url = urlImgPoke.value + id + '.png';
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Imagem não encontrada");
+      return url;
+    } catch {
+      return ovoImg;
+    }
+  };
+
 </script>
 
 <template>
@@ -62,11 +82,13 @@
         <div class="col-sm-12 col-md-6">
           
           <CardPokemonSelected 
-          :name="pokemonSelected?.name"
-          :xp="pokemonSelected?.base_experience"
-          :altura="pokemonSelected?.height"
-          :img="pokemonSelected?.sprites.other['official-artwork'].front_default"
-          :loading="loading"
+            :name="pokemonSelected?.name"
+            :xp="pokemonSelected?.base_experience"
+            :altura="pokemonSelected?.height"
+            :img="pokemonSelected?.img"
+            :loading="loading"
+          />
+
           />
           <!-- <div class="card" style="width: 18rem;">
             <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/149.png" class="card-img-top" alt="...">
