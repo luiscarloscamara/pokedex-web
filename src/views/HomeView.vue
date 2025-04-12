@@ -4,16 +4,15 @@
   import CardPokemonSelected from "@/components/CardPokemonSelected.vue";
   import PokemonData from "@/components/PokemonData.vue";
 
-  // URL para as imagens dos pokémons
+
   let urlImgPoke = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/");
   let pokemons = reactive(ref());
   let searchPokemonField = ref("");
-  const pokemonSelected = ref(null); // Corrigido aqui
+  const pokemonSelected = ref(null);
   let loading = ref(false);
   const ovoImg = new URL("@/assets/ovo.png", import.meta.url).href;
   const isModalOpen = ref(false);
 
-  // Carregar os pokémons
   onMounted(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
       .then(res => res.json())
@@ -22,7 +21,6 @@
       });
   });
 
-  // Filtrar pokémons pela busca
   const PokemonsFiltered = computed(() => {
     if (pokemons.value && searchPokemonField.value) {
       return pokemons.value.filter(pokemon =>
@@ -32,7 +30,6 @@
     return pokemons.value;
   });
 
-  // Função para formatar os detalhes do Pokémon
   const formatPokemonDetails = (data, img) => {
     return {
       name: data.name,
@@ -51,7 +48,6 @@
     };
   };
 
-  // Selecionar o Pokémon e buscar detalhes
   const selectPokemon = async (pokemon) => {
     loading.value = true;
     try {
@@ -67,7 +63,6 @@
     }
   };
 
-  // Obter a URL da imagem do Pokémon
   const getImgUrl = async (id) => {
     const url = urlImgPoke.value + id + '.png';
     try {
