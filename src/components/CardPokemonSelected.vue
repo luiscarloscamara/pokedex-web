@@ -25,7 +25,6 @@ watch(() => pokemon.img, (newImg) => {
       <img :src="infoImg" alt="Info" />
     </button>
 
-    <!-- Imagem -->
     <img
       v-if="pokemon.name"
       :src="imgSrc"
@@ -65,10 +64,6 @@ watch(() => pokemon.img, (newImg) => {
             </section>
         </div>
     </div>
-
-
-
-
   </div>
 </template>
 

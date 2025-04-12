@@ -23,7 +23,7 @@ const ovoImg = new URL("../assets/ovo.png", import.meta.url).href;
 .cardListPokemon {
   background: radial-gradient(circle, rgba(94, 87, 232, 0.6) 0%, rgba(70, 252, 244, 0.2) 100%);
   cursor: pointer;
-  height: 160px; /* ou outro valor fixo confortável */
+  height: 160px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
