@@ -100,7 +100,9 @@ const capitalize = (str) => {
       <div class="moves-section">
         <h4>Movimentos</h4>
         <div>
-          <button @click="isMovesExpanded = !isMovesExpanded">
+          <button class="expand-btn" @click="isMovesExpanded = !isMovesExpanded">
+            <span v-if="isMovesExpanded">🔼</span>
+            <span v-else>🔽</span>
             {{ isMovesExpanded ? 'Ver Menos' : 'Ver Todos' }}
           </button>
           <ul v-if="isMovesExpanded">
@@ -193,5 +195,30 @@ const capitalize = (str) => {
 .sprites img {
   height: 64px;
   margin: 0.3rem;
+}
+
+.expand-btn {
+  background-color: #d5d5d5;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.expand-btn:hover {
+  background-color: #d5d5d5;
+}
+
+.expand-btn span {
+  margin-right: 0.5rem;
+}
+
+.expand-btn:focus {
+  outline: none;
 }
 </style>
