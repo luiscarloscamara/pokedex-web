@@ -19,6 +19,7 @@ const typeColors = {
 }
 
 const evolutions = ref([])
+const isMovesExpanded = ref(false)  // Estado para controlar a expansão dos movimentos
 
 const fetchEvolutions = async () => {
   if (!props.pokemon.speciesUrl) return
@@ -44,6 +45,16 @@ const spriteUrls = computed(() => {
   return Object.entries(sprites)
     .filter(([_, value]) => typeof value === 'string' && value !== null);
 })
+
+const gameNames = computed(() => {
+  return props.pokemon.game_indices?.map(game => {
+    return capitalize(game.version.name);
+  }) || [];
+})
+
+const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 </script>
 
 <template>
@@ -88,22 +99,27 @@ const spriteUrls = computed(() => {
 
       <div class="moves-section">
         <h4>Movimentos</h4>
-        <ul>
-          <li v-for="move in pokemon.moves" :key="move.move.name">
-            {{ move.move.name }}
-          </li>
-        </ul>
+        <div>
+          <button @click="isMovesExpanded = !isMovesExpanded">
+            {{ isMovesExpanded ? 'Ver Menos' : 'Ver Todos' }}
+          </button>
+          <ul v-if="isMovesExpanded">
+            <li v-for="move in pokemon.moves" :key="move.move.name">
+              {{ move.move.name }}
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <div class="games-section" v-if="pokemon.game_indices && pokemon.game_indices.length">
+      <div class="games-section" v-if="gameNames.length">
         <h4>Games</h4>
         <div class="games-list">
           <span
-            v-for="game in pokemon.game_indices"
-            :key="game.version.name"
+            v-for="game in gameNames"
+            :key="game"
             class="game-pill"
           >
-            {{ game.version.name }}
+            {{ game }}
           </span>
         </div>
       </div>
