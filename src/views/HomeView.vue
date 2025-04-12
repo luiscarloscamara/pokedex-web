@@ -2,15 +2,18 @@
   import { onMounted, reactive, ref, computed } from "vue";
   import ListPokemons from "@/components/ListPokemons.vue";
   import CardPokemonSelected from "@/components/CardPokemonSelected.vue";
+  import PokemonData from "@/components/PokemonData.vue";
 
-  // let urlImgPoke = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/")
+  // URL para as imagens dos pokémons
   let urlImgPoke = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/");
   let pokemons = reactive(ref());
-  let searchPokemonField = ref("")
-  let pokemonSelected = reactive(ref());
-  let loading= ref(false)
+  let searchPokemonField = ref("");
+  const pokemonSelected = ref(null); // Corrigido aqui
+  let loading = ref(false);
   const ovoImg = new URL("@/assets/ovo.png", import.meta.url).href;
+  const isModalOpen = ref(false);
 
+  // Carregar os pokémons
   onMounted(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
       .then(res => res.json())
@@ -19,52 +22,52 @@
       });
   });
 
-  const PokemonsFiltered = computed(()=>{
-    if(pokemons.value && searchPokemonField.value){
-      return pokemons.value.filter(pokemon=>
+  // Filtrar pokémons pela busca
+  const PokemonsFiltered = computed(() => {
+    if (pokemons.value && searchPokemonField.value) {
+      return pokemons.value.filter(pokemon =>
         pokemon.name.toLowerCase().includes(searchPokemonField.value.toLowerCase())
-      )
+      );
     }
     return pokemons.value;
-  })
+  });
 
+  // Função para formatar os detalhes do Pokémon
+  const formatPokemonDetails = (data, img) => {
+    return {
+      name: data.name,
+      id: data.id,
+      types: data.types.map(t => t.type.name),
+      species: data.species.name,
+      img,
+      height: data.height,
+      base_experience: data.base_experience,
+      sprites: Object.entries(data.sprites)
+        .filter(([key, value]) => typeof value === 'string' && value)
+        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+      moves: data.moves,
+      game_indices: data.game_indices.map(g => ({ version: { name: g.version.name } })),
+      speciesUrl: data.species.url
+    };
+  };
 
+  // Selecionar o Pokémon e buscar detalhes
   const selectPokemon = async (pokemon) => {
     loading.value = true;
     try {
       const res = await fetch(pokemon.url);
       const data = await res.json();
+      const img = await getImgUrl(data.id);
 
-      const id = data.id;
-      const img = await getImgUrl(id);
-      const types = data.types.map(t => t.type.name);
-      const species = data.species.name;
-
-      pokemonSelected.value = {
-        name: data.name,
-        id,
-        types,
-        species,
-        img,
-      };
+      pokemonSelected.value = formatPokemonDetails(data, img);
     } catch (err) {
       alert(err);
     } finally {
       loading.value = false;
     }
   };
-  // const selectPokemon = (pokemon) => {
-  //   loading.value = true;
-  //   await fetch(pokemon.url)
-  //   .then(res => res.json())
-  //   .then(res => pokemonSelected.value = res);
-  //   .catch(err => alert(err))
-  //   .finally(()=>{
-  //     loading.value = false;
-  //   })
-  //   console.log(pokemon)
-  // }
 
+  // Obter a URL da imagem do Pokémon
   const getImgUrl = async (id) => {
     const url = urlImgPoke.value + id + '.png';
     try {
@@ -75,7 +78,6 @@
       return ovoImg;
     }
   };
-
 </script>
 
 <template>
@@ -83,7 +85,6 @@
     <div class="container">
       <div class="row mt-4">
         <div class="col-sm-12 col-md-6">
-          
           <CardPokemonSelected 
             :name="pokemonSelected?.name"
             :id="pokemonSelected?.id"
@@ -91,24 +92,13 @@
             :species="pokemonSelected?.species"
             :img="pokemonSelected?.img"
             :loading="loading"
+            @openModal="isModalOpen = true"
           />
-
-          <!-- <div class="card" style="width: 18rem;">
-            <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/149.png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div> -->
-
         </div>
 
         <div class="col-sm-12 col-md-6">
-          
           <div class="card card-list">
             <div class="card-body row">
-
               <div class="sticky-top bg-white pb-2">
                 <div class="mb-3">
                   <label hidden for="searchPokemonField" class="form-label">Pesquisar...</label>
@@ -122,18 +112,23 @@
               </div>
 
               <ListPokemons
-              v-for="pokemon in PokemonsFiltered"
-              :key="pokemon.name"
-              :name="pokemon.name"
-              :urlImgPoke="urlImgPoke + pokemon.url.split('/')[6] + '.png'"
-              @click="selectPokemon(pokemon)"
+                v-for="pokemon in PokemonsFiltered"
+                :key="pokemon.name"
+                :name="pokemon.name"
+                :urlImgPoke="urlImgPoke + pokemon.url.split('/')[6] + '.png'"
+                @click="selectPokemon(pokemon)"
               />
             </div>
           </div>
-
         </div>
       </div>
     </div>
+
+    <PokemonData
+      v-if="isModalOpen && pokemonSelected"
+      :pokemon="pokemonSelected"
+      @close="isModalOpen = false"
+    />
   </main>
 </template>
 
