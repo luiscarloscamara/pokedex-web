@@ -3,13 +3,6 @@ import {onMounted, reactive} from "vue";
 
 let pokemons = reactive();
 
-onMounted(()=>{
-  fetch("https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")
-  .then(res => res.json())
-  // .then(res => console.log(res));
-  .then(res => pokemons = res.results);
-})
-
 </script>
 
 <template>
@@ -65,6 +58,7 @@ onMounted(()=>{
     display: flex;
     align-items:center;
     justify-content: center;
-    height: 56px; 
+    height: 56px;
+    z-index: 1;
   }
 </style>
