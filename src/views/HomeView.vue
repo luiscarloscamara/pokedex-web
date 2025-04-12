@@ -44,6 +44,7 @@
         .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
       moves: data.moves,
       game_indices: data.game_indices.map(g => ({ version: { name: g.version.name } })),
+      // game_indices: details.data.game_indices,
       speciesUrl: data.species.url
     };
   };
