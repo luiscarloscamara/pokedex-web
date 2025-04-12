@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
@@ -38,6 +38,12 @@ const fetchEvolutions = async () => {
 
 watch(() => props.pokemon.speciesUrl, fetchEvolutions)
 onMounted(fetchEvolutions)
+
+const spriteUrls = computed(() => {
+  const sprites = props.pokemon?.sprites || {};
+  return Object.entries(sprites)
+    .filter(([_, value]) => typeof value === 'string' && value !== null);
+})
 </script>
 
 <template>
@@ -68,13 +74,12 @@ onMounted(fetchEvolutions)
         <span class="info-pill">XP: {{ pokemon.base_experience }}</span>
       </div>
 
-      <div class="sprites-section">
+      <div class="sprites-section" v-if="spriteUrls.length">
         <h4>Sprites</h4>
         <div class="sprites">
           <img
-            v-for="(url, key) in pokemon.sprites"
-            v-if="url && typeof url === 'string'"
-            :key="key"
+            v-for="([key, url], index) in spriteUrls"
+            :key="index"
             :src="url"
             :alt="key"
           />
@@ -90,7 +95,7 @@ onMounted(fetchEvolutions)
         </ul>
       </div>
 
-      <div class="games-section">
+      <div class="games-section" v-if="pokemon.game_indices && pokemon.game_indices.length">
         <h4>Games</h4>
         <div class="games-list">
           <span
